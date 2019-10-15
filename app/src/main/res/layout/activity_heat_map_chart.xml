@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.HeatMapChartActivity">
+    tools:context=".activity.HeatMapChartActivity"
+    android:background="@color/white">
 
     <TextView
         android:id="@+id/heatmap_textview"
@@ -14,7 +15,15 @@
         android:layout_marginLeft="24dp"
         android:layout_marginTop="24dp"
         android:text="@string/heatMapMessage"
+        android:textColor="@color/black"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-</android.support.constraint.ConstraintLayout>
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/lineChart"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/heatmap_textview"
+        android:layout_marginTop="24dp"/>
+
+</RelativeLayout>

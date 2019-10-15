@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.Toast;
 
 import com.example.chartirvan.R;
 import com.example.chartirvan.model.Malware;
+import com.google.gson.Gson;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -23,6 +25,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     private ArrayList<Malware> mData;
+    private static final String TAG = "MainActivity";
 
     // Tag for the intent extra.
     public static final String EXTRA_MESSAGE =
@@ -49,9 +52,26 @@ public class MainActivity extends AppCompatActivity {
         bar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Gson gson = new Gson();
+                String jsonMalware = gson.toJson(mData);
                 Intent intent = new Intent(MainActivity.this,
                         BarChartActivity.class);
-                intent.putExtra(EXTRA_MESSAGE, mSelectedChart);
+
+                intent.putExtra(EXTRA_MESSAGE, jsonMalware);
+                startActivity(intent);
+            }
+        });
+
+        ImageView line= findViewById(R.id.iHeat);
+        line.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Gson gson = new Gson();
+                String jsonMalware = gson.toJson(mData);
+                Intent intent = new Intent(MainActivity.this,
+                        HeatMapChartActivity.class);
+
+                intent.putExtra(EXTRA_MESSAGE, jsonMalware);
                 startActivity(intent);
             }
         });
@@ -89,6 +109,9 @@ public class MainActivity extends AppCompatActivity {
             malware.setInitWinBytesFwd(Integer.parseInt(tokens[16]));
             malware.setLabel(tokens[17]);
 
+            mData.add(malware);
+
+            Log.d(TAG, "readMalwareData: "+ malware);
         }
     }
 

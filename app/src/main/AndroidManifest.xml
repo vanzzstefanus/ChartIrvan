@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat"
         >
-        <activity android:name=".activity.ScatterChartActivity"></activity>
+        <activity android:name=".activity.ScatterChartActivity"/>
         <activity android:name=".activity.HeatMapChartActivity" />
         <activity android:name=".activity.BarChartActivity" />
         <activity
