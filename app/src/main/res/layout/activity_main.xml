@@ -19,21 +19,21 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="16dp"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteY="16dp" />
 
     <ImageView
         android:id="@+id/iBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="128dp"
+        android:layout_height="128dp"
         android:layout_marginStart="24dp"
         android:layout_marginLeft="24dp"
         android:layout_marginTop="24dp"
         android:contentDescription="@string/iBarChart"
         android:onClick="showBarChartSelected"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        app:srcCompat="@drawable/icon_bar_chart" />
+        app:layout_constraintTop_toBottomOf="@+id/buttonLoad"
+        app:srcCompat="@drawable/bar_chart_icon" />
 
     <ImageView
         android:id="@+id/iHeat"
@@ -46,7 +46,7 @@
         android:onClick="showHeatMapChartSelected"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/iBar"
-        app:srcCompat="@drawable/icon_heat_map_chart" />
+        app:srcCompat="@drawable/heat_map_chart_icon" />
 
     <ImageView
         android:id="@+id/iScatter"
@@ -59,7 +59,7 @@
         android:onClick="showScatterMapChartSelected"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/iHeat"
-        app:srcCompat="@drawable/icon_scatter_chart" />
+        app:srcCompat="@drawable/scatter_chart_icon" />
 
     <TextView
         android:id="@+id/textView2"
@@ -106,6 +106,6 @@
         android:layout_marginTop="24dp"
         android:text="Load File"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/iScatter" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
 </android.support.constraint.ConstraintLayout>
