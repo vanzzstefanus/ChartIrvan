@@ -141,8 +141,7 @@ public class MainActivity extends AppCompatActivity {
      * Shows a message that the scatter chart image was clicked.
      */
     public void showScatterMapChartSelected(View view) {
-        mSelectedChart = getString(R.string.scatter_message);
-        displayToast(getString(R.string.scatter_message));
+        startActivity(new Intent(this, ScatterChartActivity.class));
     }
 
     /**
@@ -182,4 +181,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    public void showHeat(View view) {
+        startActivity(new Intent(this, HeatMapActivity.class));
+
+    }
 }

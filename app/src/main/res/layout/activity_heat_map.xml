@@ -4,27 +4,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.ScatterChartActivity"
+    tools:context=".activity.HeatMapActivity"
     android:background="@color/white">
 
+
+
     <TextView
-        android:id="@+id/scatter_textview"
+        android:id="@+id/heatmap_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginLeft="24dp"
         android:layout_marginTop="24dp"
-        android:text="@string/bubbleMessage"
+        android:text="This is Heatmap Chart"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:textColor="@color/black"/>
 
     <com.anychart.AnyChartView
-        android:id="@+id/scatter"
+        android:id="@+id/heatmap"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/scatter_textview"
+        android:layout_below="@id/heatmap_text"
         />
-
 
 </RelativeLayout>
