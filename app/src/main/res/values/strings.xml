@@ -8,6 +8,6 @@
     <string name="heat_map_message">You selected heat map chart.</string>
     <string name="scatter_message">You selected scatter map chart.</string>
     <string name="barMessage">This is Column Chart</string>
-    <string name="heatMapMessage">This is Line Chart</string>
+    <string name="heatMapMessage">This is Heat Map Chart</string>
     <string name="scatterMessage">This is Scatter Chart</string>
 </resources>
