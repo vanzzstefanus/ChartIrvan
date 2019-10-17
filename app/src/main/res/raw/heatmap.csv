@@ -1,0 +1,16 @@
+Label,Iterasi,Akurasi
+adware,1,2
+adware,2,4
+adware,3,3
+adware,4,2
+adware,5,4
+general malware,1,4
+general malware,2,5
+general malware,3,4
+general malware,4,5
+general malware,5,4
+benign,1,4
+benign,2,4
+benign,3,1
+benign,4,1
+benign,5,3

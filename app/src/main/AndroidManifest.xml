@@ -8,9 +8,9 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AppCompat"
-        >
-        <activity android:name=".activity.ScatterChartActivity"/>
+        android:theme="@style/Theme.AppCompat">
+        <activity android:name=".activity.HeatMapActivity"></activity>
+        <activity android:name=".activity.ScatterChartActivity" />
         <activity android:name=".activity.HeatMapChartActivity" />
         <activity android:name=".activity.BarChartActivity" />
         <activity

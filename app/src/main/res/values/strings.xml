@@ -2,12 +2,12 @@
     <string name="app_name">ChartIrvan</string>
     <string name="iBarChart">This is column chart</string>
     <string name="iHeatMapChart">This is line chart</string>
-    <string name="iScatterMapChart">This is scatter map chart</string>
+    <string name="iBubbleChart">This is bubble chart</string>
     <string name="menuChart">Menu Chart</string>
     <string name="bar_message">You selected column chart.</string>
     <string name="heat_map_message">You selected heat map chart.</string>
     <string name="scatter_message">You selected scatter map chart.</string>
     <string name="barMessage">This is Column Chart</string>
-    <string name="heatMapMessage">This is Heat Map Chart</string>
-    <string name="scatterMessage">This is Scatter Chart</string>
+    <string name="lineMessage">This is Line Chart</string>
+    <string name="bubbleMessage">This is Bubble Chart</string>
 </resources>
