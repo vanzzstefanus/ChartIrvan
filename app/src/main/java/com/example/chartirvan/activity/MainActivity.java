@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        ImageView line= findViewById(R.id.iHeat);
+        ImageView line = findViewById(R.id.iHeat);
         line.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
         String line;
 
         reader.readLine();  // pembacaan baris pertama
-        while ((line = reader.readLine()) != null){
+        while ((line = reader.readLine()) != null) {
             String[] tokens = line.split(",");
             Malware malware = new Malware();
             malware.setSourcePort(Integer.parseInt(tokens[0]));
@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
 
             mData.add(malware);
 
-            Log.d(TAG, "readMalwareData: "+ malware);
+            Log.d(TAG, "readMalwareData: " + malware);
         }
     }
 

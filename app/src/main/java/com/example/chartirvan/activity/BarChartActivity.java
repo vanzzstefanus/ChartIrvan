@@ -20,7 +20,7 @@ import java.util.ArrayList;
 public class BarChartActivity extends AppCompatActivity {
     private static final String TAG = "BarChartActivity";
     private BarChart mChart;
-    private ArrayList<Malware>mDataList;
+    private ArrayList<Malware> mDataList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,10 +30,11 @@ public class BarChartActivity extends AppCompatActivity {
         // Get the intent and its data.
         String malwareString = getIntent().getStringExtra(MainActivity.EXTRA_MESSAGE);
         Gson gson = new Gson();// create object GSON untuk rubah lagi ke object Malware
-        Type type = new TypeToken<ArrayList<Malware>>(){}.getType();
+        Type type = new TypeToken<ArrayList<Malware>>() {
+        }.getType();
         mDataList = gson.fromJson(malwareString, type); //Object dimasukkan ke dalam arraylist lagi
-        for( Malware malware : mDataList){
-            Log.d(TAG, "onCreate:"+malware);
+        for (Malware malware : mDataList) {
+            Log.d(TAG, "onCreate:" + malware);
         }
 
         mChart = findViewById(R.id.barChart);
@@ -48,11 +49,10 @@ public class BarChartActivity extends AppCompatActivity {
         ArrayList<BarEntry> yVals = new ArrayList<>(); //Array List untuk BarEntry
 
 
+        for (int i = 0; i < size; i++) {
+            float y = (float) mDataList.get(i).getFlowPackets();
 
-        for(int i = 0; i < size; i++){
-            float y = (float)mDataList.get(i).getFlowPackets();
-
-            yVals.add(new BarEntry(i,y));
+            yVals.add(new BarEntry(i, y));
 
             Log.d(TAG, "setData: " + yVals);
         } // dibuat x.y nya dengan variable name yVals, di set sejumlah panjang ArrayList dengan Data Type Malware

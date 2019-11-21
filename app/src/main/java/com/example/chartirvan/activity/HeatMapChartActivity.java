@@ -20,6 +20,7 @@ public class HeatMapChartActivity extends AppCompatActivity {
     private static final String TAG = "HeatMapChartActivity";
     private LineChart mChart;
     private ArrayList<Malware> mDataList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,7 +28,8 @@ public class HeatMapChartActivity extends AppCompatActivity {
 
         String malwareString = getIntent().getStringExtra(MainActivity.EXTRA_MESSAGE);
         Gson gson = new Gson();// create object GSON untuk rubah lagi ke object Malware
-        Type type = new TypeToken<ArrayList<Malware>>(){}.getType();
+        Type type = new TypeToken<ArrayList<Malware>>() {
+        }.getType();
         mDataList = gson.fromJson(malwareString, type); //Object dimasukkan ke dalam arraylist lagi
 
         mChart = findViewById(R.id.lineChart);
@@ -39,19 +41,18 @@ public class HeatMapChartActivity extends AppCompatActivity {
         mChart.setScaleEnabled(true);
 
 
-
         setData(mDataList.size());
 
     }
 
     private void setData(int size) {
         ArrayList<Entry> yValues = new ArrayList<>();
-        for(int i = 0; i < size; i++){
-            float y = (float)mDataList.get(i).getFwdPackets();
+        for (int i = 0; i < size; i++) {
+            float y = (float) mDataList.get(i).getFwdPackets();
             yValues.add(new Entry(i, y));
         }
 
-        LineDataSet set  = new LineDataSet(yValues, "Data Set");
+        LineDataSet set = new LineDataSet(yValues, "Data Set");
         set.setFillAlpha(110);
 
         ArrayList<ILineDataSet> dataSets = new ArrayList<>();

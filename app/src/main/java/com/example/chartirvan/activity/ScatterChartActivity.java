@@ -65,25 +65,25 @@ public class ScatterChartActivity extends AppCompatActivity {
 
         List<DataEntry> data = new ArrayList<>();
 
-        for(int i =0;i<mDataList.size();i++){
-            if(mDataList.get(i).getLabel().equals("adware")){
-                data.add(new CustomBubbleDataEntry(1, mDataList.get(i).getSourcePort(), (int)mDataList.get(i).getFwdPackets()," adware",100));
+        for (int i = 0; i < mDataList.size(); i++) {
+            if (mDataList.get(i).getLabel().equals("adware")) {
+                data.add(new CustomBubbleDataEntry(1, mDataList.get(i).getSourcePort(), (int) mDataList.get(i).getFwdPackets(), " adware", 100));
             }
         }
         bubble.bubble(data).name("Adware");
         data.clear();
 
-        for(int i =0;i<mDataList.size();i++){
-            if(mDataList.get(i).getLabel().equals("General malware")){
-                data.add(new CustomBubbleDataEntry(2, mDataList.get(i).getSourcePort(), (int)mDataList.get(i).getFwdPackets()," General malware",100));
+        for (int i = 0; i < mDataList.size(); i++) {
+            if (mDataList.get(i).getLabel().equals("General malware")) {
+                data.add(new CustomBubbleDataEntry(2, mDataList.get(i).getSourcePort(), (int) mDataList.get(i).getFwdPackets(), " General malware", 100));
             }
         }
         bubble.bubble(data).name("General Malware");
         data.clear();
 
-        for(int i =0;i<mDataList.size();i++){
-            if(mDataList.get(i).getLabel().equals("Benign")){
-                data.add(new CustomBubbleDataEntry(3, mDataList.get(i).getSourcePort(), (int)mDataList.get(i).getFwdPackets()," Benign",100));
+        for (int i = 0; i < mDataList.size(); i++) {
+            if (mDataList.get(i).getLabel().equals("Benign")) {
+                data.add(new CustomBubbleDataEntry(3, mDataList.get(i).getSourcePort(), (int) mDataList.get(i).getFwdPackets(), " Benign", 100));
             }
         }
         bubble.bubble(data).name("Benign");
@@ -103,7 +103,6 @@ public class ScatterChartActivity extends AppCompatActivity {
         anyChartView.setChart(bubble);
 
 
-
     }
 
 
@@ -115,7 +114,7 @@ public class ScatterChartActivity extends AppCompatActivity {
 
         reader.readLine(); // baca garis pertama
 
-        while ((line = reader.readLine()) != null){
+        while ((line = reader.readLine()) != null) {
             String[] tokens = line.split(",");
             Malware malware = new Malware();
             malware.setSourcePort(Integer.parseInt(tokens[0]));

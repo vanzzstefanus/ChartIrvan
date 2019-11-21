@@ -80,21 +80,17 @@ public class HeatMapActivity extends AppCompatActivity {
                         "   }");
 
         List<DataEntry> data = new ArrayList<>();
-        for(int i = 0;i<mDataList.size();i++){
+        for (int i = 0; i < mDataList.size(); i++) {
 
-            if(mDataList.get(i).getAccuracy()==1){
-                 fill = "#F0FF00";
-            }
-            else if(mDataList.get(i).getAccuracy() ==2 ){
-                 fill = "#FFCE00";
-            }
-            else if(mDataList.get(i).getAccuracy() == 3){
+            if (mDataList.get(i).getAccuracy() == 1) {
+                fill = "#F0FF00";
+            } else if (mDataList.get(i).getAccuracy() == 2) {
+                fill = "#FFCE00";
+            } else if (mDataList.get(i).getAccuracy() == 3) {
                 fill = "#FF9A00";
-            }
-            else if(mDataList.get(i).getAccuracy() == 4){
+            } else if (mDataList.get(i).getAccuracy() == 4) {
                 fill = "#FF5A00";
-            }
-            else if(mDataList.get(i).getAccuracy() == 5){
+            } else if (mDataList.get(i).getAccuracy() == 5) {
                 fill = "#FF0000";
             }
 
@@ -119,7 +115,7 @@ public class HeatMapActivity extends AppCompatActivity {
         String line;
         reader.readLine();
 
-        while ((line = reader.readLine()) != null){
+        while ((line = reader.readLine()) != null) {
             String[] tokens = line.split(",");
             Accuracy accuracy = new Accuracy();
             accuracy.setIteracy(Integer.parseInt(tokens[1]));
@@ -130,8 +126,6 @@ public class HeatMapActivity extends AppCompatActivity {
 
         }
     }
-
-
 
 
 }
