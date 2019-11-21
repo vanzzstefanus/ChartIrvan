@@ -39,7 +39,7 @@
             android:onClick="showBarChartSelected"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/buttonLoad"
-            app:srcCompat="@drawable/bar_chart_icon" />
+            app:srcCompat="@drawable/barchart" />
 
         <ImageView
             android:id="@+id/iHeat"
@@ -52,7 +52,7 @@
             android:onClick="showHeatMapChartSelected"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/iBar"
-            app:srcCompat="@drawable/heat_map_chart_icon" />
+            app:srcCompat="@drawable/line_chart_icon" />
 
         <ImageView
             android:id="@+id/iScatter"
@@ -65,7 +65,7 @@
             android:onClick="showScatterMapChartSelected"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/iHeat"
-            app:srcCompat="@drawable/scatter_chart_icon" />
+            app:srcCompat="@drawable/icon_bubble_chart" />
 
         <ImageView
             android:id="@+id/iHeatMap"
@@ -78,7 +78,7 @@
             android:onClick="showHeat"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/iScatter"
-            app:srcCompat="@drawable/heatmapchart" />
+            app:srcCompat="@drawable/heat_map_chart_icon" />
 
         <TextView
             android:id="@+id/textView2"

@@ -10,4 +10,9 @@
     <string name="barMessage">This is Column Chart</string>
     <string name="lineMessage">This is Line Chart</string>
     <string name="bubbleMessage">This is Bubble Chart</string>
+    <string name="barMessageDesc">Bar Chart ini menjelaskan tentang banyak arus data
+        yang berada di sebuah jaringan smartphone berdasarkan port awal </string>
+    <string name="heatMapMessageDesc">Heat Map Chart ini menjelaskan tentang banyaknya
+    iterasi yang dilakukan dengan</string>
+    <string name="heatMapMessage">This is Heatmap Chart</string>
 </resources>
