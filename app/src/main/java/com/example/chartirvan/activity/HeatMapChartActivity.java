@@ -48,7 +48,7 @@ public class HeatMapChartActivity extends AppCompatActivity {
     private void setData(int size) {
         ArrayList<Entry> yValues = new ArrayList<>();
         for (int i = 0; i < size; i++) {
-            float y = (float) mDataList.get(i).getFwdPackets();
+            float y = (float) mDataList.get(i).getFwdPacketPerSecond();
             yValues.add(new Entry(i, y));
         }
 
