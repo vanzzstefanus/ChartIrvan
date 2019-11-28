@@ -50,7 +50,7 @@ public class BarChartActivity extends AppCompatActivity {
 
 
         for (int i = 0; i < size; i++) {
-            float y = (float) mDataList.get(i).getFlowPackets();
+            float y = (float) mDataList.get(i).getFlowPacketPerSecond();
 
             yVals.add(new BarEntry(i, y));
 
