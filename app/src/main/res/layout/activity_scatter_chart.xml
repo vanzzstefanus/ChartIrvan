@@ -22,7 +22,7 @@
     <com.anychart.AnyChartView
         android:id="@+id/scatter"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="600dp"
         android:layout_below="@id/scatter_textview"
         />
 
