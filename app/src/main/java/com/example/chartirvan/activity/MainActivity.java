@@ -2,8 +2,6 @@ package com.example.chartirvan.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,12 +10,19 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 import com.example.chartirvan.R;
 import com.example.chartirvan.helper.INodeJs;
 import com.example.chartirvan.helper.RetrofitClient;
 import com.example.chartirvan.model.Malware;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.jaiselrahman.filepicker.activity.FilePickerActivity;
+import com.jaiselrahman.filepicker.config.Configurations;
+import com.jaiselrahman.filepicker.model.MediaFile;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -34,8 +39,9 @@ import retrofit2.Retrofit;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ArrayList<Malware> mData, mDataTest;
+    private ArrayList<Malware> mData;
     private static final String TAG = "MainActivity";
+    private static final int FILE_REQUEST_CODE = 10;
 
     // Tag for the intent extra.
     public static final String EXTRA_MESSAGE =
@@ -87,8 +93,6 @@ public class MainActivity extends AppCompatActivity {
                 String jsonMalware = gson.toJson(mData);
                 Intent intent = new Intent(MainActivity.this,
                         BarChartActivity.class);
-
-                intent.putExtra(EXTRA_MESSAGE, jsonMalware);
                 startActivity(intent);
             }
         });
@@ -102,7 +106,6 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this,
                         HeatMapChartActivity.class);
 
-                intent.putExtra(EXTRA_MESSAGE, jsonMalware);
                 startActivity(intent);
             }
         });
@@ -111,7 +114,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void readMalwareData() throws IOException {
         mData = new ArrayList<>();
-        mDataTest = new ArrayList<>();
         InputStream is = getResources().openRawResource(R.raw.totalbeforepca_compressed);
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
@@ -165,7 +167,8 @@ public class MainActivity extends AppCompatActivity {
             malware.setMinPacketLength(Double.parseDouble(tokens[40]));
             malware.setMaxPacketLength(Double.parseDouble(tokens[41]));
             malware.setPacketLengthMean(Double.parseDouble(tokens[42]));
-            malware.setPacketLengthStd(Double.parseDouble(tokens[43]));;
+            malware.setPacketLengthStd(Double.parseDouble(tokens[43]));
+            ;
             malware.setPacketLengthVariance(Double.parseDouble(tokens[44]));
             malware.setFinFlagCount(Double.parseDouble(tokens[45]));
             malware.setSynFlagCount(Double.parseDouble(tokens[46]));
@@ -211,14 +214,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                for(int i =0;i<1;i++){
-                    mDataTest.add(mData.get(i));
-                }
+
                 Toast.makeText(MainActivity.this, "Successfully clicked", Toast.LENGTH_SHORT).show();
                 Gson gson = new GsonBuilder().setPrettyPrinting().create();
-                String jsonString = gson.toJson(mDataTest);
-                Log.d(TAG, "onClick: "+mDataTest.size());
-                Log.d(TAG, "onClick: "+jsonString);
+                String jsonString = gson.toJson(mData);
+                Log.d(TAG, "onClick: " + jsonString);
+                String jsonTest = "[{\"abc\": 0}]";
+                Log.d(TAG, "onClick: " + jsonTest);
                 compositeDisposable.add(myAPI.predict(jsonString)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
@@ -233,7 +235,7 @@ public class MainActivity extends AppCompatActivity {
                                    }, new Consumer<Throwable>() {
                                        @Override
                                        public void accept(Throwable throwable) throws Exception {
-                                           Log.d(TAG, "accept: "+ throwable);
+                                           Log.d(TAG, "accept: " + throwable);
                                        }
                                    }
                         ));
@@ -311,5 +313,37 @@ public class MainActivity extends AppCompatActivity {
     public void showHeat(View view) {
         startActivity(new Intent(this, HeatMapActivity.class));
 
+    }
+
+    public void loadCSVFile(View view) {
+        Intent intent = new Intent(this, FilePickerActivity.class);
+        intent.putExtra(FilePickerActivity.CONFIGS, new Configurations.Builder()
+                .setCheckPermission(true)
+                .setShowFiles(true)
+                .setShowImages(false)
+                .setShowVideos(false)
+                .setShowAudios(false)
+                .setSuffixes("csv")
+                .build());
+        startActivityForResult(intent, FILE_REQUEST_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        switch (requestCode) {
+            case FILE_REQUEST_CODE:
+
+                if (resultCode == RESULT_OK) {
+                    ArrayList<MediaFile> files = data.getParcelableArrayListExtra(FilePickerActivity.MEDIA_FILES);
+
+                    Log.d(TAG, "onActivityResult: "+files.get(0).getName());
+                    Log.d(TAG, "onActivityResult: "+files.get(0).getUri());
+                    Log.d(TAG, "onActivityResult: " + files);
+
+                    //Do something with files
+                }
+
+                break;
+        }
     }
 }
