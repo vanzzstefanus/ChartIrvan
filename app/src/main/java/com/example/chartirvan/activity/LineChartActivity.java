@@ -1,11 +1,14 @@
 package com.example.chartirvan.activity;
 
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.chartirvan.R;
+import com.example.chartirvan.model.ListChart;
 import com.example.chartirvan.model.Malware;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
@@ -20,10 +23,19 @@ import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 
-public class HeatMapChartActivity extends AppCompatActivity {
-    private static final String TAG = "HeatMapChartActivity";
+public class LineChartActivity extends AppCompatActivity {
+    private static final String TAG = "LineChartActivity";
     private LineChart mChart;
     private ArrayList<Malware> mDataList;
+    private float mParameterY1;
+    private float mParameterY2;
+    private String mNameDataSet1;
+    private String mNameDataSet2;
+
+    private int mParameterX1;
+    private int mParameterX2;
+
+    private ListChart mObject;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,8 +50,8 @@ public class HeatMapChartActivity extends AppCompatActivity {
 
         mChart = findViewById(R.id.lineChart);
 
-//        mChart.setOnChartGestureListener(HeatMapChartActivity.this);
-//        mChart.setOnChartValueSelectedListener(HeatMapChartActivity.this);
+//        mChart.setOnChartGestureListener(LineChartActivity.this);
+//        mChart.setOnChartValueSelectedListener(LineChartActivity.this);
 
         mChart.setDragEnabled(true);
         mChart.setScaleEnabled(true);
@@ -149,17 +161,63 @@ public class HeatMapChartActivity extends AppCompatActivity {
     }
 
     private void setData(int size) {
-        ArrayList<Entry> yValues = new ArrayList<>();
-        for (int i = 0; i < size; i++) {
-            float y = (float) mDataList.get(i).getFwdPacketPerSecond();
-            yValues.add(new Entry(i, y));
+        ArrayList<Entry> yValues1 = new ArrayList<>();
+        ArrayList<Entry> yValues2 = new ArrayList<>();
+
+        Intent intent = getIntent();
+        if (intent != null) {
+            mObject = intent.getParcelableExtra(BarChartListActivity.DATA_PACKET);
+            mNameDataSet1 = mObject.getParameterX();
+            mNameDataSet2 = mObject.getParameterY();
         }
 
-        LineDataSet set = new LineDataSet(yValues, "Data Set");
-        set.setFillAlpha(110);
+        for (int i = 0; i < size; i++) {
+            mParameterX1 = i;
+
+            if(mObject.getIndex() == 1){
+                mParameterY1 = (float) mDataList.get(i).getFwdPacketPerSecond();
+            }
+            else if (mObject.getIndex() == 2){
+                mParameterY1 = (float) mDataList.get(i).getSourcePort();
+            }
+            else if(mObject.getIndex() ==3 ){
+                mParameterY1 = (float) mDataList.get(i).getFwdIATStd();
+            }
+            else if(mObject.getIndex() == 4){
+                mParameterY1 = (float) mDataList.get(i).getBwdIATStd();
+            }
+            yValues1.add(new Entry(i, mParameterY1));
+        }
+
+        for (int j = 0; j < size; j++) {
+            mParameterX2 = j;
+
+            if(mObject.getIndex() == 1){
+                mParameterY2 = (float) mDataList.get(j).getBwdPacketPerSecond();
+            }
+            else if (mObject.getIndex() == 2){
+                mParameterY2 = (float) mDataList.get(j).getDestinationPort();
+            }
+            else if(mObject.getIndex() ==3 ){
+                mParameterY2 = (float) mDataList.get(j).getSourcePort();
+            }
+            else if(mObject.getIndex() == 4){
+                mParameterY2 = (float) mDataList.get(j).getDestinationPort();
+            }
+            yValues2.add(new Entry(j, mParameterY2));
+        }
+
+        LineDataSet set1 = new LineDataSet(yValues1, mNameDataSet1);
+        set1.setFillAlpha(110);
+        set1.setColor(Color.BLUE);
+
+        LineDataSet set2 = new LineDataSet(yValues2, mNameDataSet2);
+        set2.setFillAlpha(110);
+        set2.setColor(Color.RED);
 
         ArrayList<ILineDataSet> dataSets = new ArrayList<>();
-        dataSets.add(set);
+        dataSets.add(set1);
+        dataSets.add(set2);
 
         LineData data = new LineData(dataSets);
 
