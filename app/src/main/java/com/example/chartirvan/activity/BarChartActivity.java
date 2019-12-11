@@ -1,11 +1,13 @@
 package com.example.chartirvan.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.chartirvan.R;
+import com.example.chartirvan.model.ListChart;
 import com.example.chartirvan.model.Malware;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.data.BarData;
@@ -24,11 +26,15 @@ public class BarChartActivity extends AppCompatActivity {
     private static final String TAG = "BarChartActivity";
     private BarChart mChart;
     private ArrayList<Malware> mDataList;
+    private float mParameterY;
+    private int mParameterX;
+    private ListChart mObject;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bar_chart);
+
 
         // Get the intent and its data.
         try {
@@ -145,21 +151,37 @@ public class BarChartActivity extends AppCompatActivity {
     }
 
     private void setData(int size) {
+
+
         ArrayList<BarEntry> yVals = new ArrayList<>(); //Array List untuk BarEntry
 
-
+        Intent intent = getIntent();
+        if (intent != null) {
+            mObject = intent.getParcelableExtra(BarChartListActivity.DATA_PACKET);
+        }
         for (int i = 0; i < size; i++) {
-            float y = (float) mDataList.get(i).getFlowPacketPerSecond();
+            mParameterX = i;
 
-            yVals.add(new BarEntry(i, y));
+            if (mObject.getIndex() == 1) {
 
+                mParameterY = (float) mDataList.get(i).getTotalFwdPackets();
+
+            } else if (mObject.getIndex() == 2) {
+                mParameterY = (float) mDataList.get(i).getFinFlagCount();
+            }
+            yVals.add(new BarEntry(mParameterX, mParameterY));
             Log.d(TAG, "setData: " + yVals);
+
+
+//            float y = (float) mDataList.get(i).getFlowPacketPerSecond();
+
+
         } // dibuat x.y nya dengan variable name yVals, di set sejumlah panjang ArrayList dengan Data Type Malware
 
         BarDataSet set = new BarDataSet(yVals, "Data Set");
         set.setColors(ColorTemplate.MATERIAL_COLORS);
         set.setDrawValues(true);
-
+        Log.d(TAG, "setFinalData: " + yVals);
         BarData data = new BarData(set);
 
         mChart.setData(data);

@@ -17,4 +17,6 @@
     <string name="heatMapMessageDesc">Heat Map Chart ini menjelaskan tentang banyaknya
     iterasi yang dilakukan dengan</string>
     <string name="heatMapMessage">This is Heatmap Chart</string>
+    <string name="barchart_title">Daftar Barchart</string>
+    <string name="linechart_title">Daftar Linechart</string>
 </resources>

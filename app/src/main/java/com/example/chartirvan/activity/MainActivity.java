@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
                 Gson gson = new Gson();
                 String jsonMalware = gson.toJson(mData);
                 Intent intent = new Intent(MainActivity.this,
-                        BarChartActivity.class);
+                        BarChartListActivity.class);
                 startActivity(intent);
             }
         });
@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
                 Gson gson = new Gson();
                 String jsonMalware = gson.toJson(mData);
                 Intent intent = new Intent(MainActivity.this,
-                        HeatMapChartActivity.class);
+                        LineChartListActivity.class);
 
                 startActivity(intent);
             }
