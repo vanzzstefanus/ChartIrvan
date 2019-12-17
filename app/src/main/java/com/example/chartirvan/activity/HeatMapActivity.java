@@ -1,6 +1,9 @@
 package com.example.chartirvan.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.widget.TextView;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.anychart.AnyChart;
@@ -12,6 +15,7 @@ import com.anychart.enums.SelectionMode;
 import com.anychart.graphics.vector.SolidFill;
 import com.example.chartirvan.R;
 import com.example.chartirvan.model.Accuracy;
+import com.example.chartirvan.model.ListChart;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -23,15 +27,21 @@ import java.util.List;
 
 public class HeatMapActivity extends AppCompatActivity {
     private ArrayList<Accuracy> mDataList;
-
+    private TextView mDescription;
     private static final String TAG = "HeatMapActivity";
     private HeatMap riskMap;
     private String fill;
+    private ListChart mListChart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_heat_map);
+        mDescription = findViewById(R.id.description);
+        Intent intent = getIntent();
+        mListChart = intent.getParcelableExtra(MainActivity.PACKET_DATA);
+        mDescription.setText(mListChart.getDescription());
+
         try {
             readAccuracyData();
         } catch (IOException e) {

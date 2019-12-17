@@ -1,7 +1,9 @@
 package com.example.chartirvan.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -11,6 +13,7 @@ import com.anychart.chart.common.dataentry.BubbleDataEntry;
 import com.anychart.chart.common.dataentry.DataEntry;
 import com.anychart.charts.Scatter;
 import com.example.chartirvan.R;
+import com.example.chartirvan.model.ListChart;
 import com.example.chartirvan.model.Malware;
 
 import java.io.BufferedReader;
@@ -25,95 +28,38 @@ public class ScatterChartActivity extends AppCompatActivity {
     private ArrayList<Malware> mDataList;
     private static final String TAG = "ScatterChartActivity";
     private Scatter bubble;
-
+    private ListChart mListChart;
+    private InputStream is;
+    private TextView mDescription;
+    AnyChartView anyChartViewl;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scatter_chart);
+        mDescription = findViewById(R.id.description);
+        anyChartViewl = findViewById(R.id.scatter);
+
+        Intent intent = getIntent();
+        mListChart = intent.getParcelableExtra(MainActivity.PACKET_DATA);
         try {
             readMalwareData();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        AnyChartView anyChartView = findViewById(R.id.scatter);
-
-        bubble = AnyChart.bubble();
-        bubble.animation(true);
-        bubble.title().enabled(true);
-        bubble.title().useHtml(true);
-        bubble.title()
-                .padding(0d, 0d, 10d, 0d)
-                .text("Penyebaran Malware Berdasarkan Fwd Packetnya");
-
-        bubble.padding(20d, 20d, 10d, 20d);
-        bubble.yGrid(true)
-                .xGrid(true)
-                .xMinorGrid(true)
-                .yMinorGrid(true);
-
-        bubble.minBubbleSize(5d)
-                .maxBubbleSize(40d);
-
-        bubble.xAxis(0)
-                .title("Source Port")
-                .minorTicks(true);
-        bubble.yAxis(0)
-                .title("Forward Packet")
-                .minorTicks(true);
-
-        bubble.legend().enabled(true);
-        bubble.labels().padding(0d, 0d, 10d, 0d);
-
-        List<DataEntry> data = new ArrayList<>();
-
-        for (int i = 0; i < mDataList.size(); i++) {
-            if (mDataList.get(i).getLabel().equals("adware")) {
-                data.add(new CustomBubbleDataEntry(1, mDataList.get(i).getSourcePort(), (int) mDataList.get(i).getFwdPacketPerSecond(), " adware", 100));
-            }
-        }
-        bubble.bubble(data).name("Adware");
-        data.clear();
-
-        for (int i = 0; i < mDataList.size(); i++) {
-            if (mDataList.get(i).getLabel().equals("General malware")) {
-                data.add(new CustomBubbleDataEntry(2, mDataList.get(i).getSourcePort(), (int) mDataList.get(i).getFwdPacketPerSecond(), " General malware", 100));
-            }
-        }
-        bubble.bubble(data).name("General Malware");
-        data.clear();
-
-        for (int i = 0; i < mDataList.size(); i++) {
-            if (mDataList.get(i).getLabel().equals("Benign")) {
-                data.add(new CustomBubbleDataEntry(3, mDataList.get(i).getSourcePort(), (int) mDataList.get(i).getFwdPacketPerSecond(), " Benign", 100));
-            }
-        }
-        bubble.bubble(data).name("Benign");
-        bubble.tooltip()
-                .useHtml(true)
-                .fontColor("#fff")
-                .format("function() {\n" +
-                        "        return this.getData('data') + '<br/>' +\n" +
-                        "          'Forward Packet: <span style=\"color: #d2d2d2; font-size: 12px\">' +\n" +
-                        "          this.getData('value') + '</span></strong><br/>' +\n" +
-                        "          'Source port: <span style=\"color: #d2d2d2; font-size: 12px\">' +\n" +
-                        "          this.getData('x') + '</span></strong><br/>' +\n" +
-                        "          'size: <span style=\"color: #d2d2d2; font-size: 12px\">' +\n" +
-                        "          this.getData('size') + '</span></strong>';\n" +
-                        "      }");
-
-        anyChartView.setChart(bubble);
-
-
     }
 
 
     private void readMalwareData() throws IOException {
         mDataList = new ArrayList<>();
-        InputStream is = getResources().openRawResource(R.raw.totalbeforepca_compressed);
+        mDescription.setText(mListChart.getDescription());
+        if(mListChart.getIndex() == 1){
+            is = getResources().openRawResource(R.raw.fwdpacketsourceportbubble);
+        }
+        else if(mListChart.getIndex() == 2){
+            is = getResources().openRawResource(R.raw.flowpacketsourcebubble);
+        }
         BufferedReader reader = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
         String line;
-
         reader.readLine(); // baca garis pertama
 
         while ((line = reader.readLine()) != null) {
@@ -163,7 +109,6 @@ public class ScatterChartActivity extends AppCompatActivity {
             malware.setMaxPacketLength(Double.parseDouble(tokens[41]));
             malware.setPacketLengthMean(Double.parseDouble(tokens[42]));
             malware.setPacketLengthStd(Double.parseDouble(tokens[43]));
-            ;
             malware.setPacketLengthVariance(Double.parseDouble(tokens[44]));
             malware.setFinFlagCount(Double.parseDouble(tokens[45]));
             malware.setSynFlagCount(Double.parseDouble(tokens[46]));
@@ -200,10 +145,169 @@ public class ScatterChartActivity extends AppCompatActivity {
             malware.setIdleMax(Double.parseDouble(tokens[77]));
             malware.setIdleMin(Double.parseDouble(tokens[78]));
             malware.setLabel(tokens[79]);
-
             mDataList.add(malware);
-            Log.d(TAG, "readMalwareData: " + malware);
+
         }
+        if(mListChart.getIndex() == 1){
+            chartOne();
+        }
+        else if (mListChart.getIndex() == 2){
+            chartTwo();
+        }
+
+
+    }
+
+    private void chartTwo() {
+        bubble = AnyChart.bubble();
+        bubble.animation(true);
+        bubble.title().enabled(true);
+        bubble.title().useHtml(true);
+        bubble.title()
+                .padding(0d, 0d, 10d, 0d)
+                .text("Penyebaran Malware Berdasarkan Flow Packetnya");
+
+        bubble.padding(20d, 20d, 10d, 20d);
+        bubble.yGrid(true)
+                .xGrid(true)
+                .xMinorGrid(true)
+                .yMinorGrid(true);
+
+        bubble.minBubbleSize(5d)
+                .maxBubbleSize(10d);
+
+        bubble.xAxis(0)
+                .title("Source Port")
+                .minorTicks(true);
+        bubble.yAxis(0)
+                .title("Flow packet")
+                .minorTicks(true);
+
+        bubble.legend().enabled(true);
+        bubble.labels().padding(0d, 0d, 10d, 0d);
+
+        List<DataEntry> data = new ArrayList<>();
+
+        for (int i = 0; i < mDataList.size(); i++) {
+            if (mDataList.get(i).getLabel().equalsIgnoreCase("adware")) {
+                data.add(new CustomBubbleDataEntry(1, mDataList.get(i).getSourcePort(), (int) mDataList.get(i).getFlowPacketPerSecond(), " adware", 1));
+            }
+        }
+        bubble.bubble(data).name("Adware").color("#FF0000");
+        data.clear();
+
+        for (int i = 0; i < mDataList.size(); i++) {
+            if (mDataList.get(i).getLabel().equalsIgnoreCase("benign")) {
+                data.add(new CustomBubbleDataEntry(2, mDataList.get(i).getSourcePort(), (int) mDataList.get(i).getFlowPacketPerSecond(), " benign", 3));
+            }
+        }
+        bubble.bubble(data).name("Benign").color("#0000FF");
+        data.clear();
+
+        for (int i = 0; i < mDataList.size(); i++) {
+            if (mDataList.get(i).getLabel().equalsIgnoreCase("GeneralMalware")) {
+                data.add(new CustomBubbleDataEntry(3, mDataList.get(i).getSourcePort(), (int) mDataList.get(i).getFlowPacketPerSecond(), " General Malware", 2));
+            }
+        }
+        bubble.bubble(data).name("General Malware").color("#00FF00");
+
+        bubble.tooltip()
+                .useHtml(true)
+                .fontColor("#fff")
+                .format("function() {\n" +
+                        "        return this.getData('data') + '<br/>' +\n" +
+                        "          'Flow Packet: <span style=\"color: #d2d2d2; font-size: 12px\">' +\n" +
+                        "          this.getData('value') + '</span></strong><br/>' +\n" +
+                        "          'Source port: <span style=\"color: #d2d2d2; font-size: 12px\">' +\n" +
+                        "          this.getData('x') + '</span></strong><br/>' +\n" +
+                        "          'size: <span style=\"color: #d2d2d2; font-size: 12px\">' +\n" +
+                        "          this.getData('size') + '</span></strong>';\n" +
+                        "      }");
+
+        anyChartViewl.setChart(bubble);
+    }
+
+    private void chartOne(){
+        bubble = AnyChart.bubble();
+        bubble.animation(true);
+        bubble.title().enabled(true);
+        bubble.title().useHtml(true);
+        bubble.title()
+                .padding(0d, 0d, 10d, 0d)
+                .text("Penyebaran Malware Berdasarkan Fwd Packetnya");
+
+        bubble.padding(20d, 20d, 10d, 20d);
+        bubble.yGrid(true)
+                .xGrid(true)
+                .xMinorGrid(true)
+                .yMinorGrid(true);
+
+        bubble.minBubbleSize(5d)
+                .maxBubbleSize(10d);
+
+        bubble.xAxis(0)
+                .title("Source Port")
+                .minorTicks(true);
+        bubble.yAxis(0)
+                .title("Forward Packet")
+                .minorTicks(true);
+
+        bubble.legend().enabled(true);
+        bubble.labels().padding(0d, 0d, 10d, 0d);
+
+        List<DataEntry> data = new ArrayList<>();
+
+        for (int i = 0; i < mDataList.size(); i++) {
+            if (mDataList.get(i).getLabel().equalsIgnoreCase("adware")) {
+                data.add(new CustomBubbleDataEntry(1, mDataList.get(i).getSourcePort(), (int) mDataList.get(i).getFwdPacketPerSecond(), " adware", 1));
+            }
+        }
+        bubble.bubble(data).name("Adware").color("#FF0000");
+        data.clear();
+
+        for (int i = 0; i < mDataList.size(); i++) {
+            if (mDataList.get(i).getLabel().equalsIgnoreCase("benign")) {
+                data.add(new CustomBubbleDataEntry(2, mDataList.get(i).getSourcePort(), (int) mDataList.get(i).getFwdPacketPerSecond(), " benign", 3));
+            }
+        }
+        bubble.bubble(data).name("Benign").color("#0000FF");
+        data.clear();
+
+        for (int i = 0; i < mDataList.size(); i++) {
+            if (mDataList.get(i).getLabel().equalsIgnoreCase("GeneralMalware")) {
+                data.add(new CustomBubbleDataEntry(3, mDataList.get(i).getSourcePort(), (int) mDataList.get(i).getFwdPacketPerSecond(), " General Malware", 2));
+            }
+        }
+        bubble.bubble(data).name("General Malware").color("#00FF00");
+
+//        for (int i = 0; i < 100; i++) {
+//            if (mDataList.get(i).getLabel().equals("GeneralMalware")) {
+//                data.add(new CustomBubbleDataEntry(2, mDataList.get(i).getSourcePort(), (int) mDataList.get(i).getFwdPacketPerSecond(), " General malware", 100));
+//            }
+//        }
+//        bubble.bubble(data).name("GeneralMalware");
+//        data.clear();
+//        for (int i = 0; i < 100; i++) {
+//            if (mDataList.get(i).getLabel().equals("benign")) {
+//                data.add(new CustomBubbleDataEntry(3, mDataList.get(i).getSourcePort(), (int) mDataList.get(i).getFwdPacketPerSecond(), " Benign", 100));
+//            }
+//        }
+//        bubble.bubble(data).name("Benign");
+        bubble.tooltip()
+                .useHtml(true)
+                .fontColor("#fff")
+                .format("function() {\n" +
+                        "        return this.getData('data') + '<br/>' +\n" +
+                        "          'Forward Packet: <span style=\"color: #d2d2d2; font-size: 12px\">' +\n" +
+                        "          this.getData('value') + '</span></strong><br/>' +\n" +
+                        "          'Source port: <span style=\"color: #d2d2d2; font-size: 12px\">' +\n" +
+                        "          this.getData('x') + '</span></strong><br/>' +\n" +
+                        "          'size: <span style=\"color: #d2d2d2; font-size: 12px\">' +\n" +
+                        "          this.getData('size') + '</span></strong>';\n" +
+                        "      }");
+
+        anyChartViewl.setChart(bubble);
+        Log.d(TAG, "readMalwareData: " + mDataList);
     }
 
     private class CustomBubbleDataEntry extends BubbleDataEntry {

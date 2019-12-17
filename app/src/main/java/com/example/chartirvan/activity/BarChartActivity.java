@@ -45,6 +45,7 @@ public class BarChartActivity extends AppCompatActivity {
 
         mChart = findViewById(R.id.barChart);
         mChart.getDescription().setEnabled(false);
+        mChart.zoom(1000f, 0,0,0);
 
         setData(mDataList.size());
         mChart.setFitBars(true);
@@ -53,7 +54,8 @@ public class BarChartActivity extends AppCompatActivity {
 
     private void readMalwareData() throws IOException {
         mDataList = new ArrayList<>();
-        InputStream is = getResources().openRawResource(R.raw.totalbeforepca_compressed);
+
+        InputStream is = getResources().openRawResource(R.raw.finflagdestinationbar);
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
 
@@ -107,7 +109,6 @@ public class BarChartActivity extends AppCompatActivity {
             malware.setMaxPacketLength(Double.parseDouble(tokens[41]));
             malware.setPacketLengthMean(Double.parseDouble(tokens[42]));
             malware.setPacketLengthStd(Double.parseDouble(tokens[43]));
-            ;
             malware.setPacketLengthVariance(Double.parseDouble(tokens[44]));
             malware.setFinFlagCount(Double.parseDouble(tokens[45]));
             malware.setSynFlagCount(Double.parseDouble(tokens[46]));
@@ -144,33 +145,31 @@ public class BarChartActivity extends AppCompatActivity {
             malware.setIdleMax(Double.parseDouble(tokens[77]));
             malware.setIdleMin(Double.parseDouble(tokens[78]));
             malware.setLabel(tokens[79]);
-
             mDataList.add(malware);
             Log.d(TAG, "readMalwareData: " + malware);
         }
     }
 
     private void setData(int size) {
-
-
         ArrayList<BarEntry> yVals = new ArrayList<>(); //Array List untuk BarEntry
 
         Intent intent = getIntent();
         if (intent != null) {
-            mObject = intent.getParcelableExtra(BarChartListActivity.DATA_PACKET);
+            mObject = intent.getParcelableExtra(MainActivity.PACKET_DATA);
         }
         for (int i = 0; i < size; i++) {
-            mParameterX = i;
-
-            if (mObject.getIndex() == 1) {
-
-                mParameterY = (float) mDataList.get(i).getTotalFwdPackets();
-
-            } else if (mObject.getIndex() == 2) {
-                mParameterY = (float) mDataList.get(i).getFinFlagCount();
+            if(mObject.getIndex() == 5){
+                mParameterX = mDataList.get(i).getDestinationPort();
+                mParameterY = (float) mDataList.get(i).getFlowPacketPerSecond();
+                yVals.add(new BarEntry(mParameterX, mParameterY));
+                Log.d(TAG, "setData: " + yVals);
             }
-            yVals.add(new BarEntry(mParameterX, mParameterY));
-            Log.d(TAG, "setData: " + yVals);
+            else if(mObject.getIndex() == 6){
+                mParameterX = i;
+                mParameterY = (float) mDataList.get(i).getFinFlagCount();
+                yVals.add(new BarEntry(mParameterX, mParameterY));
+            }
+
 
 
 //            float y = (float) mDataList.get(i).getFlowPacketPerSecond();
@@ -183,7 +182,6 @@ public class BarChartActivity extends AppCompatActivity {
         set.setDrawValues(true);
         Log.d(TAG, "setFinalData: " + yVals);
         BarData data = new BarData(set);
-
         mChart.setData(data);
         mChart.invalidate();
         mChart.animateX(500);

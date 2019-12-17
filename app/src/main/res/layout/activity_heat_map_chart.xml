@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     tools:context=".activity.LineChartActivity"
     android:background="@color/white">
 
@@ -25,21 +25,57 @@
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/lineChart"
             android:layout_width="match_parent"
-            android:layout_height="600dp"
+            android:layout_height="400dp"
             android:layout_below="@id/heatmap_textview"
             android:layout_marginTop="24dp"/>
 
-        <TextView
+        <Button
+            android:id="@+id/buttonZoom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/lineChart"
+            android:background="@color/colorPrimary"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:text="Zoom in"
+            android:textAllCaps="false"
+            android:visibility="gone"/>
+
+        <Button
+            android:id="@+id/buttonZoomOut"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/lineChart"
+            android:layout_toEndOf="@+id/buttonZoom"
+            android:background="@color/colorPrimary"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="24dp"
+            android:text="Zoom out"
+            android:textAllCaps="false"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/description"
+            android:layout_below="@+id/buttonZoom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/lineMessageDesc"
+            android:textColor="@color/black"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="24dp"/>
+
+        <ImageView
+            android:id="@+id/image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:text="@string/lineMessageDesc"
-            android:textColor="@color/black"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"/>
+            android:layout_below="@+id/description"
+            android:src="@drawable/kesimpulan"
+            android:visibility="gone"
+            />
 
     </RelativeLayout>
 
