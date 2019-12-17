@@ -4,6 +4,10 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -25,13 +29,17 @@ import java.util.ArrayList;
 
 public class LineChartActivity extends AppCompatActivity {
     private static final String TAG = "LineChartActivity";
+    public static final String ZOOM_IN = "zoom_in";
     private LineChart mChart;
+    private TextView mDescription;
+    private ImageView mImage;
     private ArrayList<Malware> mDataList;
     private float mParameterY1;
     private float mParameterY2;
     private String mNameDataSet1;
     private String mNameDataSet2;
-
+    private InputStream is;
+    private Button mZoomIn, mZoomOut;
     private int mParameterX1;
     private int mParameterX2;
 
@@ -42,6 +50,10 @@ public class LineChartActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_heat_map_chart);
 
+        Intent intent = getIntent();
+        mObject = intent.getParcelableExtra(MainActivity.PACKET_DATA);
+
+
         try {
             readMalwareData();
         } catch (IOException e) {
@@ -49,6 +61,10 @@ public class LineChartActivity extends AppCompatActivity {
         }
 
         mChart = findViewById(R.id.lineChart);
+        mZoomIn = findViewById(R.id.buttonZoom);
+        mZoomOut = findViewById(R.id.buttonZoomOut);
+        mDescription = findViewById(R.id.description);
+        mImage = findViewById(R.id.image);
 
 //        mChart.setOnChartGestureListener(LineChartActivity.this);
 //        mChart.setOnChartValueSelectedListener(LineChartActivity.this);
@@ -57,13 +73,19 @@ public class LineChartActivity extends AppCompatActivity {
         mChart.setScaleEnabled(true);
 
 
+
         setData(mDataList.size());
 
     }
 
     private void readMalwareData() throws IOException {
         mDataList = new ArrayList<>();
-        InputStream is = getResources().openRawResource(R.raw.totalbeforepca_compressed);
+        if(mObject.getIndex() == 4){
+            is = getResources().openRawResource(R.raw.totalfwdbwdpacketsourceline);
+        }
+        else if(mObject.getIndex() == 6){
+            is = getResources().openRawResource(R.raw.themostattacked);
+        }
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
 
@@ -166,45 +188,68 @@ public class LineChartActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         if (intent != null) {
-            mObject = intent.getParcelableExtra(BarChartListActivity.DATA_PACKET);
-            mNameDataSet1 = mObject.getParameterX();
-            mNameDataSet2 = mObject.getParameterY();
+            mDescription.setText(mObject.getDescription());
+            if(mObject.getIndex() == 4){
+                mNameDataSet1 = mObject.getParameterX();
+                mNameDataSet2 = mObject.getParameterY();
+
+
+            }
+            else if(mObject.getIndex() == 6){
+                mNameDataSet1 = "Total malware from destination port";
+                mNameDataSet2 = "Total malware from source port";
+            }
+
         }
 
-        for (int i = 0; i < size; i++) {
-            mParameterX1 = i;
+        if(mObject.getIndex() == 4){
+            mChart.zoom(100f,0,0,0);
+            for (int i = 0; i < size; i++) {
+                mParameterX1 = mDataList.get(i).getSourcePort();
+                mParameterY1 = (float) mDataList.get(i).getTotalFwdPackets();
 
-            if(mObject.getIndex() == 1){
-                mParameterY1 = (float) mDataList.get(i).getFwdPacketPerSecond();
+                yValues1.add(new Entry(mParameterX1, mParameterY1));
             }
-            else if (mObject.getIndex() == 2){
-                mParameterY1 = (float) mDataList.get(i).getSourcePort();
+
+            for (int j = 0; j < size; j++) {
+                mParameterX2 = mDataList.get(j).getSourcePort();
+                mParameterY2 = (float) mDataList.get(j).getTotalBackwardPackets();
+
+                yValues2.add(new Entry(mParameterX2, mParameterY2));
             }
-            else if(mObject.getIndex() ==3 ){
-                mParameterY1 = (float) mDataList.get(i).getFwdIATStd();
-            }
-            else if(mObject.getIndex() == 4){
-                mParameterY1 = (float) mDataList.get(i).getBwdIATStd();
-            }
-            yValues1.add(new Entry(i, mParameterY1));
+
+            mZoomIn.setVisibility(View.VISIBLE);
+            mZoomOut.setVisibility(View.VISIBLE);
+            mZoomIn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mChart.zoomIn();
+                }
+            });
+            mZoomOut.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mChart.zoomOut();
+                }
+            });
+
         }
 
-        for (int j = 0; j < size; j++) {
-            mParameterX2 = j;
+        else if(mObject.getIndex() == 6){
+            mImage.setVisibility(View.VISIBLE);
+            for (int i = 0; i < size; i++) {
+                mParameterX1 = mDataList.get(i).getSourcePort();
+                mParameterY1 = (float) mDataList.get(i).getActiveMean();
 
-            if(mObject.getIndex() == 1){
-                mParameterY2 = (float) mDataList.get(j).getBwdPacketPerSecond();
+                yValues1.add(new Entry(mParameterX1, mParameterY1));
             }
-            else if (mObject.getIndex() == 2){
-                mParameterY2 = (float) mDataList.get(j).getDestinationPort();
+
+            for (int j = 0; j < size; j++) {
+                mParameterX2 = mDataList.get(j).getSourcePort();
+                mParameterY2 = (float) mDataList.get(j).getActiveStd();
+
+                yValues2.add(new Entry(mParameterX2, mParameterY2));
             }
-            else if(mObject.getIndex() ==3 ){
-                mParameterY2 = (float) mDataList.get(j).getSourcePort();
-            }
-            else if(mObject.getIndex() == 4){
-                mParameterY2 = (float) mDataList.get(j).getDestinationPort();
-            }
-            yValues2.add(new Entry(j, mParameterY2));
         }
 
         LineDataSet set1 = new LineDataSet(yValues1, mNameDataSet1);
@@ -214,7 +259,6 @@ public class LineChartActivity extends AppCompatActivity {
         LineDataSet set2 = new LineDataSet(yValues2, mNameDataSet2);
         set2.setFillAlpha(110);
         set2.setColor(Color.RED);
-
         ArrayList<ILineDataSet> dataSets = new ArrayList<>();
         dataSets.add(set1);
         dataSets.add(set2);
@@ -223,5 +267,7 @@ public class LineChartActivity extends AppCompatActivity {
 
         mChart.setData(data);
 
+
     }
+
 }
