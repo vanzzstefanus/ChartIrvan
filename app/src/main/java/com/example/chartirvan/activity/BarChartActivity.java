@@ -3,6 +3,7 @@ package com.example.chartirvan.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -29,6 +30,7 @@ public class BarChartActivity extends AppCompatActivity {
     private float mParameterY;
     private int mParameterX;
     private ListChart mObject;
+    private TextView mDescription;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +44,7 @@ public class BarChartActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        mDescription = findViewById(R.id.bar_descview);
         mChart = findViewById(R.id.barChart);
         mChart.getDescription().setEnabled(false);
         mChart.zoom(1000f, 0,0,0);
@@ -156,6 +158,7 @@ public class BarChartActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if (intent != null) {
             mObject = intent.getParcelableExtra(MainActivity.PACKET_DATA);
+            mDescription.setText(mObject.getDescription());
         }
         for (int i = 0; i < size; i++) {
             if(mObject.getIndex() == 5){

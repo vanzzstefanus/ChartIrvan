@@ -39,7 +39,6 @@
             android:layout_marginLeft="24dp"
             android:layout_marginTop="24dp"
             android:layout_below="@id/barChart"
-            android:text="@string/barMessageDesc"
             android:textColor="@color/black"
             app:layout_constraintStart_toStartOf="@id/barChart"
             app:layout_constraintTop_toBottomOf="@id/barChart" />
